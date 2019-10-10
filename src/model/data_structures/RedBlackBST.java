@@ -5,7 +5,7 @@ package model.data_structures;
  * Consultado el 02/10/19
  * Disponible en https://algs4.cs.princeton.edu/code/
  */
-public class RedBlackBST<Key extends Comparable<Key>, Value>
+public class RedBlackBST<K extends Comparable<K>, V>
 {
     private static final boolean RED   = true;
     private static final boolean BLACK = false;
@@ -14,13 +14,13 @@ public class RedBlackBST<Key extends Comparable<Key>, Value>
 
     // BST helper node data type
     private class Node {
-        private Key key;           // key
-        private Value val;         // associated data
+        private K key;           // key
+        private V val;         // associated data
         private Node left, right;  // links to left and right subtrees
         private boolean color;     // color of parent link
         private int size;          // subtree count
 
-        public Node(Key key, Value val, boolean color, int size) {
+        public Node(K key, V val, boolean color, int size) {
             this.key = key;
             this.val = val;
             this.color = color;
@@ -78,13 +78,13 @@ public class RedBlackBST<Key extends Comparable<Key>, Value>
      *     and {@code null} if the key is not in the symbol table
      * @throws IllegalArgumentException if {@code key} is {@code null}
      */
-    public Value get(Key key) {
+    public V get(K key) {
         if (key == null) throw new IllegalArgumentException("argument to get() is null");
         return get(root, key);
     }
 
     // value associated with the given key in subtree rooted at x; null if no such key
-    private Value get(Node x, Key key) {
+    private V get(Node x, K key) {
         while (x != null) {
             int cmp = key.compareTo(x.key);
             if      (cmp < 0) x = x.left;
@@ -101,7 +101,7 @@ public class RedBlackBST<Key extends Comparable<Key>, Value>
      *     {@code false} otherwise
      * @throws IllegalArgumentException if {@code key} is {@code null}
      */
-    public boolean contains(Key key) {
+    public boolean contains(K key) {
         return get(key) != null;
     }
 
@@ -119,7 +119,7 @@ public class RedBlackBST<Key extends Comparable<Key>, Value>
      * @param val the value
      * @throws IllegalArgumentException if {@code key} is {@code null}
      */
-    public void put(Key key, Value val) {
+    public void put(K key, V val) {
         if (key == null) throw new IllegalArgumentException("first argument to put() is null");
         if (val == null) {
             delete(key);
@@ -132,7 +132,7 @@ public class RedBlackBST<Key extends Comparable<Key>, Value>
     }
 
     // insert the key-value pair in the subtree rooted at h
-    private Node put(Node h, Key key, Value val) { 
+    private Node put(Node h, K key, V val) { 
         if (h == null) return new Node(key, val, RED, 1);
 
         int cmp = key.compareTo(h.key);
@@ -221,7 +221,7 @@ public class RedBlackBST<Key extends Comparable<Key>, Value>
      * @param  key the key
      * @throws IllegalArgumentException if {@code key} is {@code null}
      */
-    public void delete(Key key) { 
+    public void delete(K key) { 
         if (key == null) throw new IllegalArgumentException("argument to delete() is null");
         if (!contains(key)) return;
 
@@ -235,7 +235,7 @@ public class RedBlackBST<Key extends Comparable<Key>, Value>
     }
 
     // delete the key-value pair with the given key rooted at h
-    private Node delete(Node h, Key key) { 
+    private Node delete(Node h, K key) { 
         // assert get(h, key) != null;
 
         if (key.compareTo(h.key) < 0)  {
@@ -370,7 +370,7 @@ public class RedBlackBST<Key extends Comparable<Key>, Value>
      * @return the smallest key in the symbol table
      * @throws NoSuchElementException if the symbol table is empty
      */
-    public Key min() throws Exception{
+    public K min() throws Exception{
         if (isEmpty()) throw new Exception("calls min() with empty symbol table");
         return min(root).key;
     } 
@@ -387,7 +387,7 @@ public class RedBlackBST<Key extends Comparable<Key>, Value>
      * @return the largest key in the symbol table
      * @throws NoSuchElementException if the symbol table is empty
      */
-    public Key max() throws Exception{
+    public K max() throws Exception{
         if (isEmpty()) throw new Exception("calls max() with empty symbol table");
         return max(root).key;
     } 
@@ -407,7 +407,7 @@ public class RedBlackBST<Key extends Comparable<Key>, Value>
      * @throws NoSuchElementException if there is no such key
      * @throws IllegalArgumentException if {@code key} is {@code null}
      */
-    public Key floor(Key key)  throws Exception{
+    public K floor(K key)  throws Exception{
         if (key == null) throw new IllegalArgumentException("argument to floor() is null");
         if (isEmpty()) throw new Exception("calls floor() with empty symbol table");
         Node x = floor(root, key);
@@ -416,7 +416,7 @@ public class RedBlackBST<Key extends Comparable<Key>, Value>
     }    
 
     // the largest key in the subtree rooted at x less than or equal to the given key
-    private Node floor(Node x, Key key) {
+    private Node floor(Node x, K key) {
         if (x == null) return null;
         int cmp = key.compareTo(x.key);
         if (cmp == 0) return x;
@@ -433,7 +433,7 @@ public class RedBlackBST<Key extends Comparable<Key>, Value>
      * @throws NoSuchElementException if there is no such key
      * @throws IllegalArgumentException if {@code key} is {@code null}
      */
-    public Key ceiling(Key key) throws Exception{
+    public K ceiling(K key) throws Exception{
         if (key == null) throw new IllegalArgumentException("argument to ceiling() is null");
         if (isEmpty()) throw new Exception("calls ceiling() with empty symbol table");
         Node x = ceiling(root, key);
@@ -442,7 +442,7 @@ public class RedBlackBST<Key extends Comparable<Key>, Value>
     }
 
     // the smallest key in the subtree rooted at x greater than or equal to the given key
-    private Node ceiling(Node x, Key key) {  
+    private Node ceiling(Node x, K key) {  
         if (x == null) return null;
         int cmp = key.compareTo(x.key);
         if (cmp == 0) return x;
@@ -461,7 +461,7 @@ public class RedBlackBST<Key extends Comparable<Key>, Value>
      * @throws IllegalArgumentException unless {@code k} is between 0 and
      *        <em>n</em>–1
      */
-    public Key select(int k) {
+    public K select(int k) {
         if (k < 0 || k >= size()) {
             throw new IllegalArgumentException("argument to select() is invalid: " + k);
         }
@@ -485,13 +485,13 @@ public class RedBlackBST<Key extends Comparable<Key>, Value>
      * @return the number of keys in the symbol table strictly less than {@code key}
      * @throws IllegalArgumentException if {@code key} is {@code null}
      */
-    public int rank(Key key) {
+    public int rank(K key) {
         if (key == null) throw new IllegalArgumentException("argument to rank() is null");
         return rank(key, root);
     } 
 
     // number of keys less than key in the subtree rooted at x
-    private int rank(Key key, Node x) {
+    private int rank(K key, Node x) {
         if (x == null) return 0; 
         int cmp = key.compareTo(x.key); 
         if      (cmp < 0) return rank(key, x.left); 
@@ -509,7 +509,7 @@ public class RedBlackBST<Key extends Comparable<Key>, Value>
      * @throws IllegalArgumentException if either {@code lo} or {@code hi}
      *    is {@code null}
      */
-    public int size(Key lo, Key hi) {
+    public int size(K lo, K hi) {
         if (lo == null) throw new IllegalArgumentException("first argument to size() is null");
         if (hi == null) throw new IllegalArgumentException("second argument to size() is null");
 
