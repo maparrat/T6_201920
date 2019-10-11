@@ -2,7 +2,7 @@ package model.data_structures;
 
 import java.util.Iterator;
 
-public class Queue <T> implements IQueue <T>, Iterator<T>
+public class Queue <T> implements  Iterator<T>
 {
 	private Node front;
 	private Node back;

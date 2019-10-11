@@ -2,9 +2,14 @@ package test.data_structures;
 
 import static org.junit.Assert.*;
 
+import java.util.Iterator;
+
+import javax.swing.JComboBox.KeySelectionManager;
+
 import org.junit.Before;
 import org.junit.Test;
 
+import model.data_structures.Queue;
 import model.data_structures.RedBlackBST;
 
 public class TestRedBlack 
@@ -53,15 +58,15 @@ public class TestRedBlack
 		rbn.put(1, "a");
 		assertEquals(rbn.isEmpty(), false);
 		assertEquals(rbn.size(), 1);
-		
+
 		rbn.put(2, "b");
 		assertEquals(rbn.isEmpty(), false);
 		assertEquals(rbn.size(), 2);
-		
+
 		rb.put(11, "z");
 		assertEquals(rb.size(), 11);
 		assertEquals(rb.get(11), "z");
-		
+
 		rb.put(1, "x");
 		assertEquals(rb.size(), 11);
 		assertEquals(rb.get(1), "x");
@@ -90,8 +95,8 @@ public class TestRedBlack
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
+
+
 	}
 	@Test
 	public void maxTest()
@@ -117,7 +122,7 @@ public class TestRedBlack
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 	}
 	@Test
 	public void checkTest()
@@ -125,14 +130,25 @@ public class TestRedBlack
 		assertTrue(rb.check());
 	}
 	@Test
-	public void keysTest()
+	public void keysTest() throws Exception
 	{
-		
+		Iterator<Integer> respuesta = rb.keys();
+
+		assertTrue(respuesta.hasNext());
+
+		for (int i = 0; i < 10; i++)
+		{
+			respuesta.next();
+		}
+		assertFalse(respuesta.hasNext());
 	}
 	@Test
 	public void rangeTest()
 	{
-		
+		Queue llaves = (Queue) rb.keysInRange(1,4 );
+		assertEquals(llaves.darNumeroElementos(),4);
+		Queue values = (Queue) rb.valuesInRange(1,4 );
+		assertEquals(values.darNumeroElementos(),2);
 	}
 
 }

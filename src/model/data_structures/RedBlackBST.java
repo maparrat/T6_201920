@@ -1,5 +1,7 @@
 package model.data_structures;
 
+import java.util.Iterator;
+
 /** 
  * Implementación tomada de Algorithms 4th edition by Robert Sedgewick and Kevin Wayne (2011)
  * Consultado el 02/10/19
@@ -561,11 +563,17 @@ public class RedBlackBST<K extends Comparable<K>, V>
 	} 
 
 	// check that ranks are consistent
-	private boolean isRankConsistent() {
+	private boolean isRankConsistent() throws Exception {
 		for (int i = 0; i < size(); i++)
 			if (i != rank(select(i))) return false;
-		for (K key : keys())
+
+
+		Queue<K> keys = (Queue<K>) keys();
+		for (model.data_structures.Node actual = keys.darPrimerNodo(); actual != null; actual = actual.darSiguente())
+		{
+			K key = (K) actual.darDato();
 			if (key.compareTo(select(rank(key))) != 0) return false;
+		}
 		return true;
 	}
 
@@ -597,28 +605,19 @@ public class RedBlackBST<K extends Comparable<K>, V>
 		if (!isRed(x)) black--;
 		return isBalanced(x.left, black) && isBalanced(x.right, black);
 	} 
-	/*
-	 * iterador
-	 */
+	//-------------------------------
+	//Iterador
+	//______________________________
 	/**
 	 * Returns all keys in the symbol table as an {@code Iterable}.
 	 * To iterate over all of the keys in the symbol table named {@code st},
 	 * use the foreach notation: {@code for (Key key : st.keys())}.
 	 * @return all keys in the symbol table as an {@code Iterable}
+	 * @throws Exception 
 	 */
-	public Iterable<K> keys() {
-		if (isEmpty()) return (Iterable<K>) new Queue<K>();
-		try {
-			return keys(min(), max());
-
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-
-			return null;
-
-		}
-
+	public Iterator<K> keys() throws Exception {
+		if (isEmpty()) return (Iterator<K>) new Queue<K>();
+		return keysInRange(min(), max());
 	}
 
 	/**
@@ -632,14 +631,14 @@ public class RedBlackBST<K extends Comparable<K>, V>
 	 * @throws IllegalArgumentException if either {@code lo} or {@code hi}
 	 *    is {@code null}
 	 */
-	public Iterable<K> keys(K lo, K hi) {
+	public Iterator<K> keysInRange(K lo, K hi) {
 		if (lo == null) throw new IllegalArgumentException("first argument to keys() is null");
 		if (hi == null) throw new IllegalArgumentException("second argument to keys() is null");
 
 		Queue<K> queue = new Queue<K>();
 		// if (isEmpty() || lo.compareTo(hi) > 0) return queue;
 		keys(root, queue, lo, hi);
-		return (Iterable<K>) queue;
+		return (Iterator<K>) queue;
 	} 
 
 	// add the keys between lo and hi in the subtree rooted at x
@@ -652,6 +651,19 @@ public class RedBlackBST<K extends Comparable<K>, V>
 		if (cmplo <= 0 && cmphi >= 0) queue.enqueue(x.key); 
 		if (cmphi > 0) keys(x.right, queue, lo, hi); 
 	} 
+	public Iterator<V>  valuesInRange(K lo, K hi)
+	{
+		Queue<V> values= new Queue<>();
+		Queue<K> llaves= (Queue<K>) keysInRange(lo, hi);
+		while(llaves.hasNext())
+		{
+			
+			values.enqueue(get(llaves.dequeue()));
+			llaves.next();
+		}
+		return values;
+	}
+
 
 
 

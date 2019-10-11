@@ -2,10 +2,12 @@ package model.logic;
 
 import java.io.FileReader;
 
-import com.opencsv.CSVReader;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
-import model.data_structures.INode;
-import model.data_structures.Node;
+import model.data_structures.Queue;
+import model.data_structures.RedBlackBST;
 
 /**
  * Definicion del modelo del mundo
@@ -15,158 +17,67 @@ public class MVCModelo{
 	/**
 	 * Atributos del modelo del mundo
 	 */
-	private INode primero;
+	private RedBlackBST<String, ZonaUBER> zonas;
 
-	private INode actual;
-
-	private int tamano;
 
 	/**
 	 * Constructor del modelo del mundo
 	 */
 	public MVCModelo()
 	{
-		tamano = 0;
-	}
-	
-	/**
-	 * Metodo que carga los archivos
-	 * @param prutaArchivo CSV
-	 */
-	public void cargarArchivoCSV(int numeroMes) throws Exception
-	{		
-		if(primero == null)
-		{
-			primero = new Node();
-			actual = primero;
-		}
-		else
-		{
-			actual = primero;
-			while(actual.darSiguente() != null)
-			{
-				actual = actual.darSiguente();
-			}
-			actual.asignarSiguiente(new Node());
-			actual = actual.darSiguente();
-		}
-
-		INode anterior = null;
-		boolean primeraLectura = true;
-
-		CSVReader reader = new CSVReader(new FileReader("./data/bogota-cadastral-2018-" + numeroMes + "-All-MonthlyAggregate.csv"));
-
-		for(String[] line: reader)
-		{
-			if(!primeraLectura)
-			{
-				Double[] dato = {Double.parseDouble(line[0]), Double.parseDouble(line[1]), Double.parseDouble(line[2]), Double.parseDouble(line[3]), Double.parseDouble(line[4]), Double.parseDouble(line[5]), Double.parseDouble(line[6])}; 
-				actual.asignarDato(dato);
-				actual.asignarSiguiente(new Node());
-				anterior = actual;
-				actual = actual.darSiguente();
-				tamano++;
-			}
-			primeraLectura = false;
-		}
-
-		//Queda un nodo vacío, entonces se elimina
-		anterior.asignarSiguiente(null);
-		tamano--;
-
-		reader.close();
+		zonas = new RedBlackBST<>();
 	}
 
+	public void cargarArchivoZonas()
+	{
+		JSONParser jsonParser = new JSONParser();
+
+		try (FileReader reader = new FileReader("data/bogota_cadastral.json"))
+		{
+			Object obj = jsonParser.parse(reader);
+
+			JSONObject archivo = (JSONObject) obj;
+			JSONArray array = (JSONArray) archivo.get("features");
+
+			for(int i = 0; i < array.size(); i++)
+			{
+				JSONObject actual = (JSONObject) array.get(i);
+
+				JSONObject geometry = (JSONObject) actual.get("geometry");
+				Object[] coordinates1 = ((JSONArray) (((JSONArray) ((Object[]) (((JSONArray) geometry.get("coordinates")).toArray()))[0]).toArray())[0]).toArray();
+
+				Queue<double[]> coordenadas = new Queue<>();
+
+				for(int j = 0; j < coordinates1.length; j++)
+				{
+					double[] act = {(Double) ((JSONArray) coordinates1[j]).toArray()[0], (Double) ((JSONArray) coordinates1[j]).toArray()[1]};
+					coordenadas.enqueue(act);
+				}				
+
+				JSONObject properties = (JSONObject) actual.get("properties");
+
+				ZonaUBER nuevo = new ZonaUBER((String)geometry.get("type"), coordenadas, ((Long)properties.get("cartodb_id")).intValue(), (String)properties.get("scacodigo"), ((Long)properties.get("scatipo")).intValue(), (String)properties.get("scanombre"), (double)properties.get("shape_leng"), (double)properties.get("shape_area"), (String)properties.get("MOVEMENT_ID"), (String)properties.get("DISPLAY_NAME"));
+				zonas.put(nuevo.darMID(), nuevo);
+			}
+		}
+		catch (Exception e)
+		{e.printStackTrace();}
+	}
+	//
+	//METODOS
+	//
 	/**
 	 * Retorna el número de elementos en el modelo
 	 * @return numero de elementos presentes en el modelo
 	 */
-	public int darTamano()
+	public int darTamanoZonas()
 	{
-		return tamano;
-	}
-
-	/**
-	 * Crea una lista encadenada con los datos buscados
-	 * @param mes Mes a buscar
-	 * @param zonaOrigen Zona de origen a buscar
-	 * @return Un nodo que inicia la lista encadenada de respuesta
-	 */
-	public Node busquedaPorMesYZonaOrigen(double mes, double zonaOrigen)
-	{
-		actual = primero;
-
-		Node respuesta = new Node();
-		Node anteriorRespuesta = null;
-		Node actualRespuesta = respuesta;
-
-		while(actual != null)
-		{
-			Double[] datos = (Double[]) actual.darDato();
-			if(datos[2] == mes && datos[0] == zonaOrigen)
-			{
-				actualRespuesta.asignarDato(datos);
-				actualRespuesta.asignarSiguiente(new Node());
-				anteriorRespuesta = actualRespuesta;
-				actualRespuesta = actualRespuesta.darSiguente();
-			}
-			actual = actual.darSiguente();
-		}
-
-		if(respuesta.darDato() == null)
-		{
-			return null;
-		}
-		else
-		{
-			//Queda un nodo de más
-			anteriorRespuesta.asignarSiguiente(null);
-			return respuesta;
-		}
-	}
-
-	/**
-	 * Indica el número de viajes en el mes indicado
-	 * @param mes Mes a buscar
-	 * @return el número de viajes en el mes indicado
-	 */
-	public double numeroViajesSegunMes(double mes)
-	{
-		actual = primero;
-		double respuesta = 0;
-		
-		while(actual != null)
-		{
-			Double[] datos = (Double[]) actual.darDato();
-			if(datos[2] == mes)
-			{
-				respuesta++;
-			}
-			actual = actual.darSiguente();
-		}
-		return respuesta;
+		return zonas.size();
 	}
 	
-	/**
-	 * Indica el número de viajes en el mes indicado con la zona de origen indicada
-	 * @param mes Mes a buscar
-	 * @param zonaDeOrigen Zona de origen a buscar
-	 * @return el número de viajes en el mes indicado con la zona de origen indicada
-	 */
-	public double numeroViajesSegunMesYZonaOrigen(double mes, double zonaDeOrigen)
+	public ZonaUBER consultarZonaPorID(String p)
 	{
-		actual = primero;
-		double respuesta = 0;
-		
-		while(actual != null)
-		{
-			Double[] datos = (Double[]) actual.darDato();
-			if(datos[2] == mes && datos[0] == zonaDeOrigen)
-			{
-				respuesta++;
-			}
-			actual = actual.darSiguente();
-		}
-		return respuesta;
+		return zonas.get(p);
 	}
+	
 }
