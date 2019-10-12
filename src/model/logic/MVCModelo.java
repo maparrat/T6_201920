@@ -63,6 +63,7 @@ public class MVCModelo{
 		catch (Exception e)
 		{e.printStackTrace();}
 	}
+	
 	//
 	//METODOS
 	//
@@ -75,23 +76,33 @@ public class MVCModelo{
 		return zonas.size();
 	}
 	
+	public int darMinID() throws NumberFormatException, Exception
+	{
+		return Integer.parseInt(zonas.min());
+	}
+	
+	public int darMaxID() throws NumberFormatException, Exception
+	{
+		return Integer.parseInt(zonas.max());
+	}
+		
 	public ZonaUBER consultarZonaPorID(String p)
 	{
 		return zonas.get(p);
 	}
+	
 	public Queue consultarZonasRango(String min, String max)
 	{
 		Queue<ZonaUBER> respuesta = new Queue<>();
+		
 		if(zonas.get(min)!= null && zonas.get(max) != null )
 		{
 			respuesta = (Queue<ZonaUBER>) zonas.valuesInRange(min, max);
-		return respuesta;	
+			return respuesta;	
 		}
 		else
 		{
 			return null;
 		}
-		
-	}
-	
+	}	
 }

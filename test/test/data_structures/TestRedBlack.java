@@ -16,6 +16,7 @@ public class TestRedBlack
 {
 	private RedBlackBST<Integer, String> rb;
 	private RedBlackBST<Integer, String> rbn;
+	
 	@Before
 	public void setup1()
 	{
@@ -32,6 +33,7 @@ public class TestRedBlack
 		rb.put(9, "j");
 		rb.put(10, "k");
 	}
+	
 	@Test
 	public void constructorTest()
 	{
@@ -42,6 +44,7 @@ public class TestRedBlack
 		assertEquals(rbn.height(), -1);
 		assertTrue(rb.contains(1));
 	}
+	
 	@Test
 	public void getTest()
 	{
@@ -52,6 +55,7 @@ public class TestRedBlack
 		assertEquals(rb.get(5), "e");
 		assertNull(rbn.get(1));
 	}
+	
 	@Test
 	public void putTest()
 	{
@@ -71,14 +75,14 @@ public class TestRedBlack
 		assertEquals(rb.size(), 11);
 		assertEquals(rb.get(1), "x");
 	}
+	
 	@Test
 	public void minTest()
 	{
 		try {
-			assertNull(rbn.min());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			rbn.min();
+			fail("Debería mandar ecepción");
+		} catch (Exception e) {			
 		}
 		Integer a = 1;
 		try {
@@ -95,17 +99,15 @@ public class TestRedBlack
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-
 	}
+	
 	@Test
 	public void maxTest()
 	{
 		try {
-			assertNull(rbn.max());
+			rbn.max();
+			fail("Debería mandar ecepción");
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 		Integer a = 10;
 		try {
@@ -122,13 +124,14 @@ public class TestRedBlack
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 	}
+	
 	@Test
 	public void checkTest()
 	{
 		assertTrue(rb.check());
 	}
+	
 	@Test
 	public void keysTest() throws Exception
 	{
@@ -142,6 +145,7 @@ public class TestRedBlack
 		}
 		assertFalse(respuesta.hasNext());
 	}
+	
 	@Test
 	public void rangeTest()
 	{
@@ -150,5 +154,4 @@ public class TestRedBlack
 		Queue values = (Queue) rb.valuesInRange(1,4 );
 		assertEquals(values.darNumeroElementos(),4);
 	}
-
 }

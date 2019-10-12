@@ -35,7 +35,7 @@ public class Controller {
 		Scanner lector = new Scanner(System.in);
 		boolean fin = false;
 
-		while( !fin )
+		while(!fin)
 		{
 			view.printMenu();
 
@@ -57,7 +57,14 @@ public class Controller {
 
 				modelo.cargarArchivoZonas();
 				System.out.println("Archivos cargados");
-				System.out.println("Numero actual de zonas: " + modelo.darTamanoZonas()  + "\n---------");
+				System.out.println("Numero actual de zonas: " + modelo.darTamanoZonas());
+				try
+				{
+					System.out.println("Valor mínimo de MOVEMENT ID: " + modelo.darMinID());
+					System.out.println("Valor máximo de MOVEMENT ID: " + modelo.darMaxID()  + "\n---------");
+				}
+				catch(Exception e)
+				{}
 
 				break;
 
@@ -87,14 +94,15 @@ public class Controller {
 					System.out.println("Nombre: " + zona.darScanombre() + "\nPerímetro: " + zona.darShape_leng() + "\nÁrea: " + zona.darShape_area() + "\nNúmero de puntos: " + zona.darCoordinates().darNumeroElementos() + "\n---------");
 				}
 				break;
+
 			case 3:
 				String minimo = null;
 				String maximo = null;
 				try
 				{
-					System.out.println("--------- \nDar MOVEMENT ID minimo a buscar: ");
+					System.out.println("--------- \nDar MOVEMENT ID mínimo a buscar: ");
 					minimo = lector.next();
-					System.out.println("--------- \nDar MOVEMENT ID maximo a buscar: ");
+					System.out.println("--------- \nDar MOVEMENT ID máximo a buscar: ");
 					maximo = lector.next();
 				}
 				catch(InputMismatchException e)
@@ -102,10 +110,12 @@ public class Controller {
 					System.out.println("Debe ingresar valores numéricos\n---------");
 					break;
 				}
+
 				Queue<ZonaUBER> zonas = modelo.consultarZonasRango(minimo, maximo);
+
 				if (zonas == null)
 				{
-					System.out.println("No hay una de las zonas con el MOVEMENT ID ingresado.\n---------");
+					System.out.println("No hay ninguna zona en el rango de MOVEMENT ID ingresado.\n---------");
 				}
 				else
 				{
@@ -115,11 +125,18 @@ public class Controller {
 					{
 						System.out.println("--------- \nDato "+contador+"\n");
 						contador++;
-						System.out.println("Nombre: " + zonas.dequeue().darScanombre() + "\nPerímetro: " + zonas.dequeue().darShape_leng() + "\nÁrea: " + zonas.dequeue().darShape_area() + "\nNúmero de puntos: " + zonas.dequeue().darCoordinates().darNumeroElementos() + "\n---------");
+						ZonaUBER actual = zonas.next();
+						System.out.println("MOVEMENT ID: " + actual.darMID() + "\nNombre: " + actual.darScanombre() + "\nPerímetro: " + actual.darShape_leng() + "\nÁrea: " + actual.darShape_area() + "\nNúmero de puntos: " + actual.darCoordinates().darNumeroElementos() + "\n---------");
 					}
 				}
 				break;
-				
+
+			case 4: 
+				System.out.println("--------- \n Hasta pronto !! \n---------"); 
+				lector.close();
+				fin = true;
+				break;
+
 			default: 
 				System.out.println("--------- \n Opcion Invalida !! \n---------");
 				break;

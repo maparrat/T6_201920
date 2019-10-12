@@ -130,7 +130,8 @@ public class RedBlackBST<K extends Comparable<K>, V>
 
 		root = put(root, key, val);
 		root.color = BLACK;
-		// assert check();
+
+		assert check();
 	}
 
 	// insert the key-value pair in the subtree rooted at h
@@ -168,7 +169,7 @@ public class RedBlackBST<K extends Comparable<K>, V>
 
 		root = deleteMin(root);
 		if (!isEmpty()) root.color = BLACK;
-		// assert check();
+		assert check();
 	}
 
 	// delete the key-value pair with the minimum key rooted at h
@@ -183,7 +184,6 @@ public class RedBlackBST<K extends Comparable<K>, V>
 		return balance(h);
 	}
 
-
 	/**
 	 * Removes the largest key and associated value from the symbol table.
 	 * @throws NoSuchElementException if the symbol table is empty
@@ -197,7 +197,7 @@ public class RedBlackBST<K extends Comparable<K>, V>
 
 		root = deleteMax(root);
 		if (!isEmpty()) root.color = BLACK;
-		// assert check();
+		assert check();
 	}
 
 	// delete the key-value pair with the maximum key rooted at h
@@ -233,7 +233,7 @@ public class RedBlackBST<K extends Comparable<K>, V>
 
 		root = delete(root, key);
 		if (!isEmpty()) root.color = BLACK;
-		// assert check();
+		assert check();
 	}
 
 	// delete the key-value pair with the given key rooted at h
@@ -523,19 +523,17 @@ public class RedBlackBST<K extends Comparable<K>, V>
 	{
 		return root;
 	}
-	/**
-	 * Check
-	 */
-	public boolean check()
-	{
-		if (isBST() && isSizeConsistent()&& is23() && isBalanced())   
-		{
-			return true;
-		}
-		else 
-		{
-			return false;
-		}
+
+	/***************************************************************************
+	 *  Check integrity of red-black tree data structure.
+	 ***************************************************************************/
+	public boolean check() {
+		if (!isBST())            System.out.println("Not in symmetric order");
+		if (!isSizeConsistent()) System.out.println("Subtree counts not consistent");
+		if (!isRankConsistent()) System.out.println("Ranks not consistent");
+		if (!is23())             System.out.println("Not a 2-3 tree");
+		if (!isBalanced())       System.out.println("Not balanced");
+		return isBST() && isSizeConsistent() && isRankConsistent() && is23() && isBalanced();
 	}
 
 	// does this binary tree satisfy symmetric order?
@@ -563,18 +561,26 @@ public class RedBlackBST<K extends Comparable<K>, V>
 	} 
 
 	// check that ranks are consistent
-	private boolean isRankConsistent() throws Exception {
+	private boolean isRankConsistent(){
 		for (int i = 0; i < size(); i++)
 			if (i != rank(select(i))) return false;
 
+		Queue<K> keys;
+		try {
+			keys = (Queue<K>) keys();
 
-		Queue<K> keys = (Queue<K>) keys();
-		for (model.data_structures.Node actual = keys.darPrimerNodo(); actual != null; actual = actual.darSiguente())
-		{
-			K key = (K) actual.darDato();
-			if (key.compareTo(select(rank(key))) != 0) return false;
+			for (model.data_structures.Node actual = keys.darPrimerNodo(); actual != null; actual = actual.darSiguente())
+			{
+				K key = (K) actual.darDato();
+				if (key.compareTo(select(rank(key))) != 0) return false;
+			}
+			return true;
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
 		}
-		return true;
 	}
 
 	// Does the tree have no red right links, and at most one (left)
@@ -605,9 +611,10 @@ public class RedBlackBST<K extends Comparable<K>, V>
 		if (!isRed(x)) black--;
 		return isBalanced(x.left, black) && isBalanced(x.right, black);
 	} 
+
 	//-------------------------------
 	//Iterador
-	//______________________________
+	//-------------------------------
 	/**
 	 * Returns all keys in the symbol table as an {@code Iterable}.
 	 * To iterate over all of the keys in the symbol table named {@code st},
@@ -638,6 +645,7 @@ public class RedBlackBST<K extends Comparable<K>, V>
 		Queue<K> queue = new Queue<K>();
 		// if (isEmpty() || lo.compareTo(hi) > 0) return queue;
 		keys(root, queue, lo, hi);
+
 		return (Iterator<K>) queue;
 	} 
 
@@ -646,25 +654,22 @@ public class RedBlackBST<K extends Comparable<K>, V>
 	private void keys(Node x, Queue<K> queue, K lo, K hi) { 
 		if (x == null) return; 
 		int cmplo = lo.compareTo(x.key); 
-		int cmphi = hi.compareTo(x.key); 
+		int cmphi = hi.compareTo(x.key);
+
 		if (cmplo < 0) keys(x.left, queue, lo, hi); 
 		if (cmplo <= 0 && cmphi >= 0) queue.enqueue(x.key); 
 		if (cmphi > 0) keys(x.right, queue, lo, hi); 
 	} 
-	public Iterator<V>  valuesInRange(K lo, K hi)
+
+	public Iterator<V> valuesInRange(K lo, K hi)
 	{
 		Queue<V> values= new Queue<>();
 		Queue<K> llaves= (Queue<K>) keysInRange(lo, hi);
+
 		while(llaves.hasNext())
 		{
-			
-			values.enqueue(get(llaves.dequeue()));
-		
+			values.enqueue(get(llaves.dequeue()));	
 		}
 		return values;
 	}
-
-
-
-
 }
