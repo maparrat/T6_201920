@@ -79,5 +79,19 @@ public class MVCModelo{
 	{
 		return zonas.get(p);
 	}
+	public Queue consultarZonasRango(String min, String max)
+	{
+		Queue<ZonaUBER> respuesta = new Queue<>();
+		if(zonas.get(min)!= null && zonas.get(max) != null )
+		{
+			respuesta = (Queue<ZonaUBER>) zonas.valuesInRange(min, max);
+		return respuesta;	
+		}
+		else
+		{
+			return null;
+		}
+		
+	}
 	
 }

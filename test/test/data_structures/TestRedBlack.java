@@ -148,7 +148,7 @@ public class TestRedBlack
 		Queue llaves = (Queue) rb.keysInRange(1,4 );
 		assertEquals(llaves.darNumeroElementos(),4);
 		Queue values = (Queue) rb.valuesInRange(1,4 );
-		assertEquals(values.darNumeroElementos(),2);
+		assertEquals(values.darNumeroElementos(),4);
 	}
 
 }

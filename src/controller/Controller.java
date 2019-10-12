@@ -4,6 +4,7 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import model.data_structures.Node;
+import model.data_structures.Queue;
 import model.logic.MVCModelo;
 import model.logic.ZonaUBER;
 import view.MVCView;
@@ -86,7 +87,39 @@ public class Controller {
 					System.out.println("Nombre: " + zona.darScanombre() + "\nPerímetro: " + zona.darShape_leng() + "\nÁrea: " + zona.darShape_area() + "\nNúmero de puntos: " + zona.darCoordinates().darNumeroElementos() + "\n---------");
 				}
 				break;
-
+			case 3:
+				String minimo = null;
+				String maximo = null;
+				try
+				{
+					System.out.println("--------- \nDar MOVEMENT ID minimo a buscar: ");
+					minimo = lector.next();
+					System.out.println("--------- \nDar MOVEMENT ID maximo a buscar: ");
+					maximo = lector.next();
+				}
+				catch(InputMismatchException e)
+				{
+					System.out.println("Debe ingresar valores numéricos\n---------");
+					break;
+				}
+				Queue<ZonaUBER> zonas = modelo.consultarZonasRango(minimo, maximo);
+				if (zonas == null)
+				{
+					System.out.println("No hay una de las zonas con el MOVEMENT ID ingresado.\n---------");
+				}
+				else
+				{
+					System.out.println("--------- \nDatos de las zonas: \n");
+					int contador = 1;
+					while(zonas.hasNext())
+					{
+						System.out.println("--------- \nDato "+contador+"\n");
+						contador++;
+						System.out.println("Nombre: " + zonas.dequeue().darScanombre() + "\nPerímetro: " + zonas.dequeue().darShape_leng() + "\nÁrea: " + zonas.dequeue().darShape_area() + "\nNúmero de puntos: " + zonas.dequeue().darCoordinates().darNumeroElementos() + "\n---------");
+					}
+				}
+				break;
+				
 			default: 
 				System.out.println("--------- \n Opcion Invalida !! \n---------");
 				break;

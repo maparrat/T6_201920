@@ -659,7 +659,7 @@ public class RedBlackBST<K extends Comparable<K>, V>
 		{
 			
 			values.enqueue(get(llaves.dequeue()));
-			llaves.next();
+		
 		}
 		return values;
 	}
