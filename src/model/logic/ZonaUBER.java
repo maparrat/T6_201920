@@ -18,9 +18,11 @@ public class ZonaUBER implements Comparable<ZonaUBER>
 
 	private double shape_leng, shape_area;
 
-	private String MOVEMENT_ID, DISPLAY_NAME;
+	private int MOVEMENT_ID;
+	
+	private String DISPLAY_NAME;
 
-	public ZonaUBER(String pType, Queue<double[]> pCoordinates, int pCartodb_id, String pScacodigo, int pScatipo, String pScanombre, double pShape_leng, double pShape_area, String pMOVEMENT_ID, String pDISPLAY_NAME)
+	public ZonaUBER(String pType, Queue<double[]> pCoordinates, int pCartodb_id, String pScacodigo, int pScatipo, String pScanombre, double pShape_leng, double pShape_area, int pMOVEMENT_ID, String pDISPLAY_NAME)
 	{
 		type = pType;
 		coordinates = pCoordinates;
@@ -53,7 +55,7 @@ public class ZonaUBER implements Comparable<ZonaUBER>
 		return DISPLAY_NAME;
 	}
 	
-	public String darMID()
+	public int darMID()
 	{
 		return MOVEMENT_ID;
 	}

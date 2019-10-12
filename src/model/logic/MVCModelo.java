@@ -17,7 +17,7 @@ public class MVCModelo{
 	/**
 	 * Atributos del modelo del mundo
 	 */
-	private RedBlackBST<String, ZonaUBER> zonas;
+	private RedBlackBST<Integer, ZonaUBER> zonas;
 
 
 	/**
@@ -56,14 +56,14 @@ public class MVCModelo{
 
 				JSONObject properties = (JSONObject) actual.get("properties");
 
-				ZonaUBER nuevo = new ZonaUBER((String)geometry.get("type"), coordenadas, ((Long)properties.get("cartodb_id")).intValue(), (String)properties.get("scacodigo"), ((Long)properties.get("scatipo")).intValue(), (String)properties.get("scanombre"), (double)properties.get("shape_leng"), (double)properties.get("shape_area"), (String)properties.get("MOVEMENT_ID"), (String)properties.get("DISPLAY_NAME"));
+				ZonaUBER nuevo = new ZonaUBER((String)geometry.get("type"), coordenadas, ((Long)properties.get("cartodb_id")).intValue(), (String)properties.get("scacodigo"), ((Long)properties.get("scatipo")).intValue(), (String)properties.get("scanombre"), (double)properties.get("shape_leng"), (double)properties.get("shape_area"), Integer.parseInt((String)properties.get("MOVEMENT_ID")), (String)properties.get("DISPLAY_NAME"));
 				zonas.put(nuevo.darMID(), nuevo);
 			}
 		}
 		catch (Exception e)
 		{e.printStackTrace();}
 	}
-	
+
 	//
 	//METODOS
 	//
@@ -75,30 +75,27 @@ public class MVCModelo{
 	{
 		return zonas.size();
 	}
-	
+
 	public int darMinID() throws NumberFormatException, Exception
 	{
-		return Integer.parseInt(zonas.min());
+		return zonas.min();
 	}
-	
+
 	public int darMaxID() throws NumberFormatException, Exception
 	{
-		return Integer.parseInt(zonas.max());
+		return zonas.max();
 	}
-		
-	public ZonaUBER consultarZonaPorID(String p)
+
+	public ZonaUBER consultarZonaPorID(int p)
 	{
 		return zonas.get(p);
 	}
-	
-	public Queue consultarZonasRango(String min, String max)
-	{
-		Queue<ZonaUBER> respuesta = new Queue<>();
-		
+
+	public Queue consultarZonasRango(int min, int max)
+	{		
 		if(zonas.get(min)!= null && zonas.get(max) != null )
 		{
-			respuesta = (Queue<ZonaUBER>) zonas.valuesInRange(min, max);
-			return respuesta;	
+			return (Queue) zonas.valuesInRange(min, max);
 		}
 		else
 		{

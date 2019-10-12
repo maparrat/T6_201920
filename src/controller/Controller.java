@@ -70,11 +70,11 @@ public class Controller {
 
 			case 2:
 
-				String MID;
+				int MID;
 				try
 				{
 					System.out.println("--------- \nDar MOVEMENT ID a buscar: ");
-					MID = lector.next();
+					MID = lector.nextInt();
 				}
 				catch(InputMismatchException e)
 				{
@@ -91,19 +91,20 @@ public class Controller {
 				{
 					System.out.println("--------- \nDatos de la zona: \n");
 
-					System.out.println("Nombre: " + zona.darScanombre() + "\nPerímetro: " + zona.darShape_leng() + "\nÁrea: " + zona.darShape_area() + "\nNúmero de puntos: " + zona.darCoordinates().darNumeroElementos() + "\n---------");
+					System.out.println("Nombre: " + zona.darScanombre() + "\nPerímetro: " + (zona.darShape_leng()*100) + " kilómetros\nÁrea: " + (zona.darShape_area()*10000) + " kilómetros cuadrados\nNúmero de puntos: " + zona.darCoordinates().darNumeroElementos() + "\n---------");
 				}
 				break;
 
 			case 3:
-				String minimo = null;
-				String maximo = null;
+				
+				int minimo;
+				int maximo;
 				try
 				{
 					System.out.println("--------- \nDar MOVEMENT ID mínimo a buscar: ");
-					minimo = lector.next();
+					minimo = lector.nextInt();
 					System.out.println("--------- \nDar MOVEMENT ID máximo a buscar: ");
-					maximo = lector.next();
+					maximo = lector.nextInt();
 				}
 				catch(InputMismatchException e)
 				{
@@ -123,10 +124,10 @@ public class Controller {
 					int contador = 1;
 					while(zonas.hasNext())
 					{
-						System.out.println("--------- \nDato "+contador+"\n");
+						System.out.println("--------- \nDato " + contador + ":\n");
 						contador++;
 						ZonaUBER actual = zonas.next();
-						System.out.println("MOVEMENT ID: " + actual.darMID() + "\nNombre: " + actual.darScanombre() + "\nPerímetro: " + actual.darShape_leng() + "\nÁrea: " + actual.darShape_area() + "\nNúmero de puntos: " + actual.darCoordinates().darNumeroElementos() + "\n---------");
+						System.out.println("MOVEMENT ID: " + actual.darMID() + "\nNombre: " + actual.darScanombre() + "\nPerímetro: " + (actual.darShape_leng()*100) + " kilómetros\nÁrea: " + (actual.darShape_area()*10000) + " kilómetros cuadrados\nNúmero de puntos: " + actual.darCoordinates().darNumeroElementos() + "\n---------");
 					}
 				}
 				break;
